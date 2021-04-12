@@ -1,9 +1,11 @@
+// 3
 fun hello(name: String){
     println("Hello, $name!")
 }
 fun main(){
     val name = readLine()
     hello("$name")
+    // 5
     println("What is your favorite language?")
     println("1. C++")
     println("2. C#")
