@@ -1,8 +1,9 @@
 import kotlin.math.absoluteValue
 import kotlin.math.sqrt
 import kotlin.math.floor
-fun main(){
-    val y = 10
+fun main() {
+    p9()
+    /*val y = 10
     val x = y.absoluteValue
     println("Сумма цифр = " + sumDigitsNum(x))
     println("Произведение цифр = " + mulDigitNum(x))
@@ -12,7 +13,8 @@ fun main(){
     println("Количество цифр, меньших 3 = " + countDigitsNumLess3(x))
     println("Количество чисел, не являющихся делителями исходного числа,\n" +
             "не взамно простых с ним и взаимно простых с суммой простых\n" +
-            "цифр этого числа = " + p3(x))
+            "цифр этого числа = " + p3(x)
+    */
 }
 // 6
 fun sumDigitsNum(number: Int): Int {
@@ -106,4 +108,47 @@ fun p3(curN: Int, curQuantity: Int, number: Int, sum: Int): Int {
     val newQuantity: Int = if (number % curN != 0 && nod(curN,number) != 1 && nod(curN,sum) == 1) curQuantity + 1
     else curQuantity
     return p3(curN-1,newQuantity,number,sum)
+}
+// 9
+fun p9() {
+    var i = ""
+    var n = 0
+    while (i != "8") {
+        menu()
+        print("Введите номер метода: ")
+        i = readLine().toString()
+        if (i >= "1" && i <= "7") {
+            print("Введите число: ")
+            n = readLine()!!.toInt()
+        }
+        when(i) {
+            "1" -> println("Сумма цифр = " + sumDigitsNum(n))
+            "2" -> println("Максимальная цифра = " + maxDigit(n))
+            "3" -> println("Минимальная цифра = " + minDigit(n))
+            "4" -> println("Произведение цифр = " + mulDigitNum(n))
+            "5" -> println("Сумма непростых делителей = " + sumNonPrimeDiv(n))
+            "6" -> println("Количество цифр, меньших 3 = " + countDigitsNumLess3(n))
+            "7" -> println("Количество чисел, не являющихся делителями исходного числа,\n" +
+                    "не взамно простых с ним и взаимно простых с суммой простых\n" +
+                    "цифр этого числа = " + p3(n))
+            "8" -> println("Выход...")
+            else -> println("Неизвестная команда!")
+        }
+    }
+}
+fun menu() {
+    println("--------Меню--------")
+    println("1. Сумма цифр числа.")
+    println("2. Максимальная цифра числа.")
+    println("3. Минимальная цифра числа.")
+    println("4. Произведение цифр числа.")
+    println("5. Сумма непростых делителей.")
+    println("6. Количество цифр, меньших 3.")
+    println(
+        "7. Количество чисел, не являющихся делителями исходного числа,\n" +
+                "не взамно простых с ним и взаимно простых с суммой простых\n" +
+                "цифр этого числа."
+    )
+    println("8. Выход.")
+    println("--------------------")
 }
