@@ -2,7 +2,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.sqrt
 import kotlin.math.floor
 fun main(){
-    val y = 103
+    val y = 10
     val x = y.absoluteValue
     println("Сумма цифр = " + sumDigitsNum(x))
     println("Произведение цифр = " + mulDigitNum(x))
@@ -10,6 +10,9 @@ fun main(){
     println("Минимальная цифра = " + minDigit(x))
     println("Сумма непростых делителей = " + sumNonPrimeDiv(x))
     println("Количество цифр, меньших 3 = " + countDigitsNumLess3(x))
+    println("Количество чисел, не являющихся делителями исходного числа,\n" +
+            "не взамно простых с ним и взаимно простых с суммой простых\n" +
+            "цифр этого числа = " + p3(x))
 }
 // 6
 fun sumDigitsNum(number: Int): Int {
@@ -69,4 +72,38 @@ fun countDigitsLess3(number: Int): Int {
     if (number == 0) return 0
     return if (number % 10 < 3) 1 + countDigitsLess3(number/10)
     else countDigitsLess3(number/10)
+}
+// 8_3
+// НОД.
+fun nod(x: Int, y: Int): Int {
+    return if (x == y) x
+    else {
+        val d: Int
+        if (x < y) {
+            d = y - x
+            nod(x,d)
+        } else {
+            d = x - y
+            nod(d,y)
+        }
+    }
+}
+// Сумма простых цифр числа.
+fun sumPrimeDigit(number: Int): Int = sumPrimeDigit(number,0)
+fun sumPrimeDigit(number: Int, curSum: Int): Int {
+    if (number == 0) return curSum
+    val newSum: Int = if (isPrime(number % 10)) curSum + number % 10
+    else curSum
+    return sumPrimeDigit(number/10,newSum)
+}
+fun p3(number: Int): Int =
+    when (sumPrimeDigit(number)) {
+        0 -> 0
+        else -> p3(number,0,number,sumPrimeDigit(number))
+    }
+fun p3(curN: Int, curQuantity: Int, number: Int, sum: Int): Int {
+    if (curN == 0) return curQuantity
+    val newQuantity: Int = if (number % curN != 0 && nod(curN,number) != 1 && nod(curN,sum) == 1) curQuantity + 1
+    else curQuantity
+    return p3(curN-1,newQuantity,number,sum)
 }
