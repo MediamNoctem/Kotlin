@@ -68,9 +68,91 @@ fun p2(s: String): Int {
     }
     return c
 }
+// 10_3
+// Перестановка.
+fun nextPermutation(a: Array<Int>, n: Int): Array<Int> {
+    var j = n-2
+    while (j > -1 && a[j] >= a[j+1]) j--
+    if (j <= -1) return emptyArray()
+    var k = n - 1
+    while (a[j] >= a[k]) k--
+    var tmp = a[j]
+    a[j] = a[k]
+    a[k] = tmp
+    var l = j+1
+    var r = n - 1
+    while (l < r) {
+        tmp = a[l]
+        a[l] = a[r]
+        a[r] = tmp
+        l++
+        r--
+    }
+    return a
+}
+// Число по массиву.
+fun numByArray(a: Array<Int>): Long {
+    val size = a.size
+    var i = size - 1
+    var p = 1
+    var num: Long = 0
+    while (i >= 0) {
+        num += a[i]*p
+        p*=10
+        i--
+    }
+    return num
+}
+// Массив по числу.
+fun arrayByNum(num: Int): Array<Int> {
+    var size = 0
+    var n = num
+    while (n > 0) {
+        size++
+        n = n.div(10)
+    }
+    var a = Array<Int>(size){0}
+    n = num
+    for (i in 0 until size) {
+        a[i] = n.mod(10)
+        n = n.div(10)
+    }
+    return a.reversedArray()
+}
+// Проверка, является ли число кубом.
+fun checkCube(n: Long): Boolean {
+    var i: Long = 0
+    var cube: Long = 0
+    while (cube < n) {
+        i++
+        cube = i*i*i
+    }
+    return cube == n
+}
+fun p3(): Int {
+    var count = 0
+    var i = 4
+    while (count != 5) {
+        i++
+        var perm = arrayByNum(i * i * i)
+        perm.sort()
+        var num: Long = numByArray(perm)
+        count = 0
+        while (perm.isNotEmpty()) {
+            if (checkCube(num)) {
+                count++
+            }
+            perm = nextPermutation(perm, perm.size)
+            num = numByArray(perm)
+            if (count > 5) break
+        }
+    }
+    return i
+}
 fun main() {
     val file1 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\names.txt").readLines()
     println("10.1: " + p1(file1[0]))
     val file2 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\words.txt").readLines()
     println("10.2: " + p2(file2[0]))
+    println("10.3: " + p3())
 }
