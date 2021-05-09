@@ -1,4 +1,5 @@
 import java.io.File
+// 10_1
 // Считаем количество запятых.
 tailrec fun countCommas(s: String, ind: Int, count: Int): Int {
     if (ind == s.length) return count
@@ -47,8 +48,29 @@ fun p1(s: String): Long {
     }
     return sum
 }
+// 10_2
+// Вычислим треугольное число по номеру.
+fun triangleNumber(n: Int): Int {
+    val t = 0.5*n*(n+1)
+    return t.toInt()
+}
+fun checkTriangleNum(t: Int): Boolean {
+    var i = 1
+    while (triangleNumber(i) < t) i++
+    return t == triangleNumber(i)
+}
+fun p2(s: String): Int {
+    var c = 0
+    val arr = makeArray(s)
+    arr.forEach {
+        val t = alphabeticalValue(it,0)
+        if (checkTriangleNum(t)) c++
+    }
+    return c
+}
 fun main() {
-    val file = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\names.txt").readLines()
-    val nameScores = p1(file[0])
-    println(nameScores)
+    val file1 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\names.txt").readLines()
+    println("10.1: " + p1(file1[0]))
+    val file2 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\words.txt").readLines()
+    println("10.2: " + p2(file2[0]))
 }
