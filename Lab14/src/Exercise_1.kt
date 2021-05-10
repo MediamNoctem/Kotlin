@@ -58,15 +58,34 @@ tailrec fun maxDigitDown(number: Int, curMax: Int): Int =
         if (number % 10 > curMax) maxDigitDown(number / 10, number % 10)
         else maxDigitDown(number / 10, curMax)
     }
+// 4
+tailrec fun digitsDown(n: Int, accum: Int, f:(Int,Int) -> Int): Int =
+    if (n == 0) accum else {
+        val n1 = n / 10
+        val accum1 = f(accum,n % 10)
+        digitsDown(n1,accum1,f)
+    }
+fun sumDigits(n: Int): Int = digitsDown(n,0, { a, b -> a + b })
+fun mulDigits(n: Int): Int = digitsDown(n,1,{ a,b -> a*b })
+fun minDigit(n: Int): Int = digitsDown(n,n % 10, { a,b -> min(a,b) })
+fun maxDigit(n: Int): Int = digitsDown(n, n % 10, { a,b -> max(a,b) })
 fun main() {
-    val y = 102
+    val y = 915148
     val x = y.absoluteValue
+    println("Exercise 1:")
     println("Сумма цифр (Up) = " + sumDigitsNumUp(x))
+    println("Exercise 2:")
     println("Сумма цифр (down) = " + sumDigitsNumDown(x,0))
+    println("Exercise 3:")
     println("Произведение цифр (Up) = " + mulDigitNumUp(x))
     println("Произведение цифр (down) = " + mulDigitNumDown(x))
     println("Минимальная цифра (Up) = " + minDigitUp(x))
     println("Минимальная цифра (down) = " + minDigitDown(x))
     println("Максимальная цифра (Up) = " + maxDigitUp(x))
     println("Максимальная цифра (down) = " + maxDigitDown(x))
+    println("Exercise 4:")
+    println("Сумма цифр = " + sumDigits(x))
+    println("Произведение цифр = " + mulDigits(x))
+    println("Минимальная цифра = " + minDigit(x))
+    println("Максимальная цифра = " + maxDigit(x))
 }
