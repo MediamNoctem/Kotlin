@@ -13,7 +13,7 @@ fun main() {
     println("Количество цифр, меньших 3 = " + countDigitsNumLess3(x))
     println("Количество чисел, не являющихся делителями исходного числа,\n" +
             "не взамно простых с ним и взаимно простых с суммой простых\n" +
-            "цифр этого числа = " + p3(x)
+            "цифр этого числа = " + p3(x))
     */
 }
 // 6
@@ -67,7 +67,8 @@ fun sumNonPrimeDiv(curDiv: Int, curSum: Int, number: Int): Int {
 // 8_2
 fun countDigitsNumLess3(number: Int): Int =
     when(number) {
-        in 0..9 -> 1
+        in 0..2 -> 1
+        in 3..9 -> 0
         else -> countDigitsLess3(number)
     }
 fun countDigitsLess3(number: Int): Int {
