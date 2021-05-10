@@ -69,6 +69,13 @@ fun sumDigits(n: Int): Int = digitsDown(n,0, { a, b -> a + b })
 fun mulDigits(n: Int): Int = digitsDown(n,1,{ a,b -> a*b })
 fun minDigit(n: Int): Int = digitsDown(n,n % 10, { a,b -> min(a,b) })
 fun maxDigit(n: Int): Int = digitsDown(n, n % 10, { a,b -> max(a,b) })
+// 5
+tailrec fun digitsDown(n: Int, accum: Int, f:(Int,Int)->Int, pr:(Int)->Boolean): Int =
+    if (n == 0) accum else {
+        val n1 = n/10
+        val accum1 = if (pr(n/10)) accum + (n%10) else accum
+        digitsDown(n1,accum1,f,pr)
+    }
 fun main() {
     val y = 915148
     val x = y.absoluteValue
