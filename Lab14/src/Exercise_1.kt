@@ -72,10 +72,17 @@ fun maxDigit(n: Int): Int = digitsDown(n, n % 10, { a,b -> max(a,b) })
 // 5
 tailrec fun digitsDown(n: Int, accum: Int, f:(Int,Int)->Int, pr:(Int)->Boolean): Int =
     if (n == 0) accum else {
-        val n1 = n/10
-        val accum1 = if (pr(n/10)) accum + (n%10) else accum
+        val n1 = n / 10
+        val accum1 = if (pr(n % 10)) f(accum,n % 10) else accum
         digitsDown(n1,accum1,f,pr)
     }
+// 6
+// Произведение цифр числа, меньших 3.
+fun mulDigitsLess3(n: Int): Int = digitsDown(n,1,{ a,b -> a*b }, { a -> a < 3 })
+// Сумма цифр числа, кратных 5.
+fun sumDigitsMult5(n: Int): Int = digitsDown(n,0,{ a,b -> a + b }, { a -> (a % 5 == 0) })
+// Максимальная цифра числа, не превосходящая 6.
+fun maxDigitNotExceeding6(n: Int): Int = digitsDown(n,-1,{ a,b -> max(a,b) }, { a -> a <= 6 })
 fun main() {
     val y = 915148
     val x = y.absoluteValue
@@ -95,4 +102,8 @@ fun main() {
     println("Произведение цифр = " + mulDigits(x))
     println("Минимальная цифра = " + minDigit(x))
     println("Максимальная цифра = " + maxDigit(x))
+    println("Exercise 6:")
+    println("Произведение цифр числа, меньших 3 = " + mulDigitsLess3(x))
+    println("Сумма цифр числа, кратных 5 = " + sumDigitsMult5(x))
+    println("Максимальная цифра числа, не превосходящая 6 = " + maxDigitNotExceeding6(x))
 }
