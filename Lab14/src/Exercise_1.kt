@@ -154,6 +154,56 @@ tailrec fun p3(curN: Int, curQuantity: Int, number: Int, sum: Int): Int =
         else curQuantity
         p3(curN - 1, newQuantity, number, sum)
     }
+// 8
+fun menu() {
+    println("--------Меню--------")
+    println("1. Сумма цифр числа.")
+    println("2. Максимальная цифра числа.")
+    println("3. Минимальная цифра числа.")
+    println("4. Произведение цифр числа.")
+    println("5. Произведение цифр числа, меньших 3.")
+    println("6. Количество цифр, меньших 3.")
+    println("7. Сумма цифр числа, кратных 5."
+    )
+    println("8. Выход.")
+    println("--------------------")
+}
+fun countDigitsLess3(n: Int): Int = digitsDown(n,0,{ c,_: Int -> c + 1 }, { a -> a < 3})
+fun op(s: String): (Int) -> Int =
+    when(s) {
+        "1" -> { a: Int -> sumDigits(a) }
+        "2" -> { a: Int -> maxDigit(a) }
+        "3" -> { a: Int -> minDigit(a) }
+        "4" -> { a: Int -> mulDigits(a) }
+        "5" -> { a: Int -> mulDigitsLess3(a) }
+        "6" -> { a: Int -> countDigitsLess3(a) }
+        "7" -> { a: Int -> sumDigitsMult5(a) }
+        else -> throw IllegalArgumentException("Неизвестная команда!")
+    }
+fun p8() {
+    var i = ""
+    var n = 0
+    while (i != "8") {
+        menu()
+        print("Введите номер метода: ")
+        i = readLine().toString()
+        if (i >= "1" && i <= "7") {
+            print("Введите число: ")
+            n = readLine()!!.toInt()
+        }
+        when(i) {
+            "1" -> println("Сумма цифр = " + op("1")(n))
+            "2" -> println("Максимальная цифра = " + op("2")(n))
+            "3" -> println("Минимальная цифра = " + op("3")(n))
+            "4" -> println("Произведение цифр = " + op("4")(n))
+            "5" -> println("Произведение цифр числа, меньших 3 = " + op("5")(n))
+            "6" -> println("Количество цифр, меньших 3 = " + op("6")(n))
+            "7" -> println("Сумма цифр числа, кратных 5 = " + op("7")(n))
+            "8" -> println("Выход...")
+            else -> throw IllegalArgumentException("Неизвестная команда!")
+        }
+    }
+}
 fun main() {
     val y = 10
     val x = y.absoluteValue
@@ -176,11 +226,13 @@ fun main() {
     println("Exercise 6:")
     println("Произведение цифр числа, меньших 3 = " + mulDigitsLess3(x))
     println("Сумма цифр числа, кратных 5 = " + sumDigitsMult5(x))
-    println("Максимальная цифра числа, не превосходящая 6 = " + maxDigitNotExceeding6(x))*/
+    println("Максимальная цифра числа, не превосходящая 6 = " + maxDigitNotExceeding6(x))
     println("Exercise 7:")
     println("Сумма непростых делителей = " + sumNonPrimeDiv(x))
     println("Количество цифр, меньших 3 = " + countDigitsNumLess3(x))
     println("Количество чисел, не являющихся делителями исходного числа,\n" +
             "не взамно простых с ним и взаимно простых с суммой простых\n" +
-            "цифр этого числа = " + p3(x))
+            "цифр этого числа = " + p3(x))*/
+    println("Exercise 8:")
+    p8()
 }
