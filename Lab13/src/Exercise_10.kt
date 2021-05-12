@@ -70,7 +70,7 @@ fun p2(s: String): Int {
 }
 // 10_3
 // Перестановка.
-fun nextPermutation(a: Array<Int>, n: Int): Array<Int> {
+fun nextPermutation(a: Array<Byte>, n: Int): Array<Byte> {
     var j = n-2
     while (j > -1 && a[j] >= a[j+1]) j--
     if (j <= -1) return emptyArray()
@@ -91,10 +91,10 @@ fun nextPermutation(a: Array<Int>, n: Int): Array<Int> {
     return a
 }
 // Число по массиву.
-fun numByArray(a: Array<Int>): Long {
+fun numByArray(a: Array<Byte>): Long {
     val size = a.size
     var i = size - 1
-    var p = 1
+    var p: Long = 1
     var num: Long = 0
     while (i >= 0) {
         num += a[i]*p
@@ -104,18 +104,18 @@ fun numByArray(a: Array<Int>): Long {
     return num
 }
 // Массив по числу.
-fun arrayByNum(num: Int): Array<Int> {
+fun arrayByNum(num: Long): Array<Byte> {
     var size = 0
     var n = num
     while (n > 0) {
         size++
-        n = n.div(10)
+        n /= 10
     }
-    var a = Array<Int>(size){0}
+    val a = Array<Byte>(size){0}
     n = num
     for (i in 0 until size) {
-        a[i] = n.mod(10)
-        n = n.div(10)
+        a[i] = (n % 10).toByte()
+        n /= 10
     }
     return a.reversedArray()
 }
@@ -129,15 +129,17 @@ fun checkCube(n: Long): Boolean {
     }
     return cube == n
 }
-fun p3(): Int {
+fun p3(): Long {
     var count = 0
-    var i = 4
+    var i: Long = 4
     while (count != 5) {
         i++
-        var perm = arrayByNum(i * i * i)
+        val t = i * i * i
+        var perm = arrayByNum(t)
         perm.sort()
         var num: Long = numByArray(perm)
         count = 0
+        println(num)
         while (perm.isNotEmpty()) {
             if (checkCube(num)) {
                 count++
@@ -147,12 +149,12 @@ fun p3(): Int {
             if (count > 5) break
         }
     }
-    return i
+    return i * i * i
 }
 fun main() {
-    val file1 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\names.txt").readLines()
+    /*val file1 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\names.txt").readLines()
     println("10.1: " + p1(file1[0]))
     val file2 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\words.txt").readLines()
-    println("10.2: " + p2(file2[0]))
+    println("10.2: " + p2(file2[0]))*/
     println("10.3: " + p3())
 }
