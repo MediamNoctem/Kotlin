@@ -1,10 +1,10 @@
 import java.io.File
 fun main() {
-    val file1 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\names.txt").readLines()
+    /*val file1 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\names.txt").readLines()
     println("22: " + p1(file1[0]))
     val file2 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\words.txt").readLines()
-    println("42: " + p2(file2[0]))
-    //println("62: " + p3())
+    println("42: " + p2(file2[0]))*/
+    println("62: " + p3())
 }
 // 22
 // Считаем количество запятых.
@@ -113,20 +113,19 @@ fun p2(s0: String): Int =
 
 // 62
 // Перестановка.
-/*
-fun cond1(a: Array<Int>,n: Int): Int = cond1(a,n,n-2)
-tailrec fun cond1(a: Array<Int>,n: Int,j: Int): Int =
+fun cond1(a: Array<Byte>,n: Int): Int = cond1(a,n,n-2)
+tailrec fun cond1(a: Array<Byte>,n: Int,j: Int): Int =
     if (j > -1 && a[j] >= a[j+1]) {
         val j1 = j - 1
         cond1(a,n,j1)
     } else j
-fun cond2(a: Array<Int>,n: Int,j: Int): Int = cond2(a,n,n-1,j)
-tailrec fun cond2(a: Array<Int>,n: Int,k: Int,j: Int): Int =
+fun cond2(a: Array<Byte>,n: Int,j: Int): Int = cond2(a,n,n-1,j)
+tailrec fun cond2(a: Array<Byte>,n: Int,k: Int,j: Int): Int =
     if (a[j] >= a[k]) {
         val k1 = k - 1
         cond2(a,n,k1,j)
     } else k
-tailrec fun cond3(a: Array<Int>,l: Int,r: Int): Array<Int> =
+tailrec fun cond3(a: Array<Byte>,l: Int,r: Int): Array<Byte> =
     if (l < r) {
         val tmp = a[l]
         a[l] = a[r]
@@ -135,10 +134,10 @@ tailrec fun cond3(a: Array<Int>,l: Int,r: Int): Array<Int> =
         val r1 = r - 1
         cond3(a,l1,r1)
     } else a
-fun nextPermutation(a: Array<Int>, n: Int): Array<Int> =
+fun nextPermutation(a: Array<Byte>, n: Int): Array<Byte> =
     run {
         val j = cond1(a, n)
-        if (j <= -1) emptyArray<Int>() else {
+        if (j <= -1) emptyArray<Byte>() else {
             val k = cond2(a, n, j)
             var tmp = a[j]
             a[j] = a[k]
@@ -149,8 +148,8 @@ fun nextPermutation(a: Array<Int>, n: Int): Array<Int> =
         }
     }
 // Число по массиву.
-fun numByArray(a: Array<Int>): Long = numByArray(a,a.size - 1,1,0)
-tailrec fun numByArray(a: Array<Int>, i: Int, p: Long, cur: Long): Long =
+fun numByArray(a: Array<Byte>): Long = numByArray(a,a.size - 1,1,0)
+tailrec fun numByArray(a: Array<Byte>, i: Int, p: Long, cur: Long): Long =
     if (i < 0) cur else {
         val p1 = p * 10
         val i1 = i - 1
@@ -158,28 +157,28 @@ tailrec fun numByArray(a: Array<Int>, i: Int, p: Long, cur: Long): Long =
         numByArray(a,i1,p1,cur1)
     }
 // Считаем количество цифр в числе.
-fun countDigits(n: Int): Int = countDigits(n,0)
-tailrec fun countDigits(n: Int, c: Int): Int =
+fun countDigits(n: Long): Int = countDigits(n,0)
+tailrec fun countDigits(n: Long, c: Int): Int =
     if (n <= 0) c else {
         val c1 = c + 1
         val n1 = n / 10
         countDigits(n1,c1)
     }
 // Массив по числу.
-fun arrayByNum(num: Int): Array<Int> =
+fun arrayByNum(num: Long): Array<Byte> =
     when {
         num >= 0 -> {
-            val size = countDigits(num,0)
-            var a = Array<Int>(size){0}
+            val size = countDigits(num)
+            var a = Array<Byte>(size){0}
             a = arrayByNum(a,num,size,0)
             a.reversedArray()
         }
         else -> throw IllegalArgumentException("Ошибка!")
     }
-tailrec fun arrayByNum(a: Array<Int>,num: Int,size: Int, i: Int): Array<Int> =
+tailrec fun arrayByNum(a: Array<Byte>,num: Long,size: Int, i: Int): Array<Byte> =
     when (i) {
         in 0 until size -> {
-            a[i] = num % 10
+            a[i] = (num % 10).toByte()
             val num1 = num / 10
             val i1 = i + 1
             arrayByNum(a,num1,size,i1)
@@ -195,21 +194,21 @@ tailrec fun checkCube(n: Long,i: Long,cube: Long): Boolean =
         checkCube(n,i1,cube1)
     }
     else cube == n
-tailrec fun p3_1(perm: Array<Int>,num: Long, count: Int): Int =
+tailrec fun p3_1(perm: Array<Byte>,num: Long, count: Int): Int =
     if (perm.isNotEmpty()) {
         val count1 = if (checkCube(num)) count + 1 else count
         val perm1 = nextPermutation(perm, perm.size)
         val num1 = numByArray(perm1)
         if (count1 > 5) count1 else p3_1(perm1,num1,count1)
     } else count
-tailrec fun p3_2(count: Int,i: Int): Int =
+tailrec fun p3_2(count: Int,i:Long): Long =
     if (count != 5) {
-        val i1 = i + 1
-        var perm = arrayByNum(i * i * i)
+        val i1: Long = i + 1
+        val t = i1*i1*i1
+        val perm = arrayByNum(t)
         perm.sort()
-        var num: Long = numByArray(perm)
-        var count1 = p3_1(perm,num,0)
+        val num: Long = numByArray(perm)
+        val count1 = p3_1(perm,num,0)
         p3_2(count1,i1)
-    } else i
-fun p3(): Int = p3_2(0,0)
-*/
+    } else i*i*i
+fun p3(): Long = p3_2(0,4)
