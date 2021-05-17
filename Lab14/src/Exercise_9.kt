@@ -1,10 +1,12 @@
 import java.io.File
+import kotlin.math.pow
+
 fun main() {
     /*val file1 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\names.txt").readLines()
-    println("22: " + p1(file1[0]))
+    println("22: " + p22(file1[0]))
     val file2 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\words.txt").readLines()
-    println("42: " + p2(file2[0]))*/
-    println("62: " + p3())
+    println("42: " + p42(file2[0]))*/
+    println("62: " + p62())
 }
 // 22
 // Считаем количество запятых.
@@ -65,7 +67,7 @@ tailrec fun sumAlphabetValue(arr: Array<String>, i: Int, n: Int, cur: Long): Lon
         val i1 = i + 1
         sumAlphabetValue(arr,i1,n,cur1)
     }
-fun p1(s0: String): Long =
+fun p22(s0: String): Long =
     when (s0) {
         "" -> 0
         else -> {
@@ -99,7 +101,7 @@ tailrec fun countTriangleNum(arr: Array<String>, i: Int, n: Int, cur: Int): Int 
         countTriangleNum(arr,i1,n,cur1)
     }
 
-fun p2(s0: String): Int =
+fun p42(s0: String): Int =
     when(s0) {
         "" -> 0
         else -> {
@@ -112,103 +114,84 @@ fun p2(s0: String): Int =
     }
 
 // 62
-// Перестановка.
-fun cond1(a: Array<Byte>,n: Int): Int = cond1(a,n,n-2)
-tailrec fun cond1(a: Array<Byte>,n: Int,j: Int): Int =
-    if (j > -1 && a[j] >= a[j+1]) {
-        val j1 = j - 1
-        cond1(a,n,j1)
-    } else j
-fun cond2(a: Array<Byte>,n: Int,j: Int): Int = cond2(a,n,n-1,j)
-tailrec fun cond2(a: Array<Byte>,n: Int,k: Int,j: Int): Int =
-    if (a[j] >= a[k]) {
-        val k1 = k - 1
-        cond2(a,n,k1,j)
-    } else k
-tailrec fun cond3(a: Array<Byte>,l: Int,r: Int): Array<Byte> =
-    if (l < r) {
-        val tmp = a[l]
-        a[l] = a[r]
-        a[r] = tmp
-        val l1 = l + 1
-        val r1 = r - 1
-        cond3(a,l1,r1)
-    } else a
-fun nextPermutation(a: Array<Byte>, n: Int): Array<Byte> =
+fun cubeRoot(n: Long): Long = Math.cbrt(n.toDouble()).toLong()
+// Составляем массив, где номер элемента - цифра числа,
+// а значение элемента - сколько раз встречается эта цифра в числе.
+fun arrayByNum(n: Long): Array<Byte> =
     run {
-        val j = cond1(a, n)
-        if (j <= -1) emptyArray<Byte>() else {
-            val k = cond2(a, n, j)
-            var tmp = a[j]
-            a[j] = a[k]
-            a[k] = tmp
-            var l = j + 1
-            var r = n - 1
-            cond3(a, l, r)
-        }
+        val a = Array<Byte>(10){0}
+        arrayByNum(n,a)
     }
-// Число по массиву.
-fun numByArray(a: Array<Byte>): Long = numByArray(a,a.size - 1,1,0)
-tailrec fun numByArray(a: Array<Byte>, i: Int, p: Long, cur: Long): Long =
-    if (i < 0) cur else {
-        val p1 = p * 10
-        val i1 = i - 1
-        val cur1 = cur + a[i] * p
-        numByArray(a,i1,p1,cur1)
-    }
-// Считаем количество цифр в числе.
-fun countDigits(n: Long): Int = countDigits(n,0)
-tailrec fun countDigits(n: Long, c: Int): Int =
-    if (n <= 0) c else {
-        val c1 = c + 1
+tailrec fun arrayByNum(n: Long, a: Array<Byte>): Array<Byte> =
+    if (n == 0L) a else {
+        val i = (n % 10).toInt()
+        a[i]++
         val n1 = n / 10
-        countDigits(n1,c1)
+        arrayByNum(n1, a)
     }
-// Массив по числу.
-fun arrayByNum(num: Long): Array<Byte> =
-    when {
-        num >= 0 -> {
-            val size = countDigits(num)
-            var a = Array<Byte>(size){0}
-            a = arrayByNum(a,num,size,0)
-            a.reversedArray()
+// Составляем минимальное число, которое только можно
+// составить из данного массива цифр.
+fun makeMinNum(a: Array<Byte>): Long =
+    run {
+        val a1 = a.clone()
+        makeMinNum(a1,0,1,9)
+    }
+tailrec fun makeMinNum(a: Array<Byte>, n: Long, p: Long, i: Int): Long =
+    if (i == -1) n else {
+        if (a[i] != 0.toByte()) {
+            val n1 = n + p * i
+            a[i]--
+            val p1 = p * 10
+            makeMinNum(a, n1, p1, i)
+        } else {
+            val i1 = i - 1
+            makeMinNum(a, n, p, i1)
         }
-        else -> throw IllegalArgumentException("Ошибка!")
     }
-tailrec fun arrayByNum(a: Array<Byte>,num: Long,size: Int, i: Int): Array<Byte> =
-    when (i) {
-        in 0 until size -> {
-            a[i] = (num % 10).toByte()
-            val num1 = num / 10
+// Составляем максимальное число, которое только можно
+// составить из данного массива цифр.
+fun makeMaxNum(a: Array<Byte>): Long =
+    run {
+        val a1 = a.clone()
+        makeMaxNum(a1,0,1,0)
+    }
+tailrec fun makeMaxNum(a: Array<Byte>, n: Long, p: Long, i: Int): Long =
+    if (i == a.size) n else {
+        if (a[i] != 0.toByte()) {
+            val n1 = n + p * i
+            a[i]--
+            val p1 = p * 10
+            makeMaxNum(a, n1, p1, i)
+        } else {
             val i1 = i + 1
-            arrayByNum(a,num1,size,i1)
+            makeMaxNum(a, n, p, i1)
         }
-        else -> a
     }
-// Проверка, является ли число кубом.
-fun checkCube(n: Long): Boolean = checkCube(n,1,1)
-tailrec fun checkCube(n: Long,i: Long,cube: Long): Boolean =
-    if (cube < n) {
+// Проверяем равенство массивов.
+tailrec fun checkEqualityArrays(a: Array<Byte>, b: Array<Byte>, i: Int): Boolean =
+    if (i == 10) true else {
+        if (a[i] != b[i]) false else {
+            val i1 = i + 1
+            checkEqualityArrays(a,b,i1)
+        }
+    }
+// Считаем количество перестановок.
+tailrec fun countPerm(start: Long, end: Long,a: Array<Byte>, count: Int): Int =
+    if (start > end) count else {
+        val n = start * start * start
+        val b = arrayByNum(n)
+        val c = if (checkEqualityArrays(a,b,0)) count + 1 else count
+        val s1 = start + 1
+        countPerm(s1, end, a, c)
+    }
+fun p62(): Long = p62(4,0)
+tailrec fun p62(i: Long, count: Int): Long =
+    if (count == 5) i*i*i else {
         val i1 = i + 1
-        val cube1 = i1*i1*i1
-        checkCube(n,i1,cube1)
+        val n = i1*i1*i1
+        val a = arrayByNum(n)
+        val min = cubeRoot(makeMinNum(a))
+        val max = cubeRoot(makeMaxNum(a))
+        val c = countPerm(min,max,a,0)
+        p62(i1,c)
     }
-    else cube == n
-tailrec fun p3_1(perm: Array<Byte>,num: Long, count: Int): Int =
-    if (perm.isNotEmpty()) {
-        val count1 = if (checkCube(num)) count + 1 else count
-        val perm1 = nextPermutation(perm, perm.size)
-        val num1 = numByArray(perm1)
-        if (count1 > 5) count1 else p3_1(perm1,num1,count1)
-    } else count
-tailrec fun p3_2(count: Int,i:Long): Long =
-    if (count != 5) {
-        val i1: Long = i + 1
-        val t = i1*i1*i1
-        val perm = arrayByNum(t)
-        perm.sort()
-        val num: Long = numByArray(perm)
-        val count1 = p3_1(perm,num,0)
-        p3_2(count1,i1)
-    } else i*i*i
-fun p3(): Long = p3_2(0,4)
