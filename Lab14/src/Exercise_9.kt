@@ -1,13 +1,17 @@
 import java.io.File
+import java.lang.Integer.min
 import kotlin.math.pow
 
 fun main() {
     /*val file1 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\names.txt").readLines()
     println("22: " + p22(file1[0]))
     val file2 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\words.txt").readLines()
-    println("42: " + p42(file2[0]))*/
-    println("62: " + p62())
+    println("42: " + p42(file2[0]))
+    println("62: " + p62())*/
+    val file3 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab14\\matrix.txt").readLines()
+    println("82: " + p82(file3))
 }
+
 // 22
 // Считаем количество запятых.
 tailrec fun countCommas(s: String, ind: Int, count: Int): Int =
@@ -79,6 +83,7 @@ fun p22(s0: String): Long =
             sumAlphabetValue(arr, 0, n, 0)
         }
     }
+
 // 42
 // Вычислим треугольное число по номеру.
 fun triangleNumber(n: Int): Int =
@@ -92,7 +97,6 @@ tailrec fun checkTriangleNum(t: Int, i: Int): Boolean =
         val i1 = i + 1
         checkTriangleNum(t,i1)
     } else t == triangleNumber(i)
-
 tailrec fun countTriangleNum(arr: Array<String>, i: Int, n: Int, cur: Int): Int =
     if (i == n) cur else {
         val t = alphabeticalValue(arr[i],0,0)
@@ -100,7 +104,6 @@ tailrec fun countTriangleNum(arr: Array<String>, i: Int, n: Int, cur: Int): Int 
         val i1 = i + 1
         countTriangleNum(arr,i1,n,cur1)
     }
-
 fun p42(s0: String): Int =
     when(s0) {
         "" -> 0
@@ -195,3 +198,87 @@ tailrec fun p62(i: Long, count: Int): Long =
         val c = countPerm(min,max,a,0)
         p62(i1,c)
     }
+
+// 82
+// Выделяем число из строки.
+tailrec fun getNumber(s: String,i: Int,n: String): String =
+    when (s[i]) {
+        ',' -> n
+        else -> {
+            val n1 = n + s[i]
+            val i1 = i + 1
+            getNumber(s,i1,n1)
+        }
+    }
+// Добавляем к массиву еще один элемент.
+tailrec fun fillArray(arr1: Array<Int>, arr2: Array<Int>, i: Int, n: Int, s: Int): Unit =
+    if (n - i == 1) {
+        arr2[i] = s
+    } else {
+        arr2[i] = arr1[i]
+        val i1 = i + 1
+        fillArray(arr1,arr2,i1,n,s)
+    }
+// Заполняем строку матрицы.
+tailrec fun makeStringMatrix(s: String, a: Array<Int>, i: Int, n: Int): Array<Int> =
+    if (i == n) a else {
+        val i1 = i + 1
+        val a1 = Array(i1){0}
+        val num = getNumber(s,0,"")
+        val s1 = s.drop(num.length + 1)
+        val n1 = num.toInt()
+        fillArray(a,a1,0,i1,n1)
+        makeStringMatrix(s1,a1,i1,n)
+    }
+// Составляем матрицу.
+fun makeMatrix(f: List<String>, m: Array<Array<Int>>, n: Int): Array<Array<Int>> = makeMatrix(f,m,0,n)
+tailrec fun makeMatrix(f: List<String>, m: Array<Array<Int>>, j: Int, n: Int): Array<Array<Int>> =
+    if (j == n) m else {
+        val s = f[j] + ","
+        m[j] = makeStringMatrix(s,m[j],0,n)
+        val j1 = j + 1
+        makeMatrix(f,m,j1,n)
+    }
+// Ищем минимальную сумму пути.
+var minSum = Int.MAX_VALUE
+fun findMinSum(m: Array<Array<Int>>,n: Int): Int = findMinSum(m,0,n)
+tailrec fun findMinSum(m: Array<Array<Int>>,i: Int,n: Int): Int =
+    if (i == n) minSum else {
+        val i1 = i + 1
+        val sum = findMinSum(0, m, i, 0, n, ' ', ' ')
+        minSum = if (sum < minSum) sum else minSum
+        findMinSum(m,i1,n)
+    }
+fun findMinSum(sum: Int, m: Array<Array<Int>>, i: Int, j: Int, n: Int, l1: Char, l2: Char): Int =
+    if (j == n) {
+        if (sum < minSum) {
+            minSum = sum
+            minSum
+        } else {
+            minSum
+        }
+    } else {
+        val sum1 = sum + m[i][j]
+        if (sum1 > minSum) findMinSum(sum1, m, i, n, n, l1, l2)
+        else {
+            // Вверх
+            if (i > 0 && j != 0 && j != n - 1 && l1 != 'd' && l2 != 'd') {
+                val i1 = i - 1
+                findMinSum(sum1, m, i1, j, n, l2, 'u')
+            }
+            // Вниз
+            if (i != n - 1 && j != 0 && j != n - 1 && l1 != 'u' && l2 != 'u') {
+                val i1 = i + 1
+                findMinSum(sum1, m, i1, j, n, l2, 'd')
+            }
+            // Вправо
+            val j1 = j + 1
+            findMinSum(sum1, m, i, j1, n, l2, 'r')
+        }
+    }
+fun p82(f: List<String>): Int =
+    run {
+    var m = Array(80) { Array(80) { 0 } }
+    m = makeMatrix(f,m,80)
+    findMinSum(m,80)
+}
