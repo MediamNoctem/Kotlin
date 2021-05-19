@@ -7,9 +7,11 @@ fun main() {
     println("22: " + p22(file1[0]))
     val file2 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab13\\words.txt").readLines()
     println("42: " + p42(file2[0]))
-    println("62: " + p62())*/
+    println("62: " + p62())
     val file3 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab14\\matrix.txt").readLines()
-    println("82: " + p82(file3))
+    println("82: " + p82(file3))*/
+    val file4 = File("C:\\Users\\Anastasia\\Documents\\GitHub\\Kotlin\\Lab14\\triangles.txt").readLines()
+    println("102: " + p102(file4))
 }
 
 // 22
@@ -282,3 +284,31 @@ fun p82(f: List<String>): Int =
     m = makeMatrix(f,m,80)
     findMinSum(m,80)
 }
+
+// 102
+// Создаем матрицу треугольников.
+tailrec fun arrayOfTriangles(f: List<String>, a: Array<Array<Int>>, j: Int, n: Int, m: Int): Array<Array<Int>> =
+    if (j == n) a else {
+        val s = f[j] + ","
+        a[j] = makeStringMatrix(s,a[j],0,m)
+        val j1 = j + 1
+        arrayOfTriangles(f,a,j1,n,m)
+    }
+// Считаем количество треугольников, содержащих начало координат.
+fun countTriangles(a: Array<Array<Int>>, count: Int, i: Int, n: Int): Int =
+    if (i == n) count else {
+        val s1 = a[i][0] * (a[i][3] - a[i][1]) - (a[i][2] - a[i][0]) * a[i][1]
+        val s2 = a[i][2] * (a[i][5] - a[i][3]) - (a[i][4] - a[i][2]) * a[i][3]
+        val s3 = a[i][4] * (a[i][1] - a[i][5]) - (a[i][0] - a[i][4]) * a[i][5]
+        val count1 = if ((s1 >= 0 && s2 >= 0 && s3 >= 0) || (s1 <= 0 && s2 <= 0 && s3 <= 0)) count + 1
+        else count
+        val i1 = i + 1
+        countTriangles(a,count1,i1,n)
+    }
+fun p102(f: List<String>): Int =
+    run {
+        val n = f.size
+        var a = Array(n) {Array(6) {0} }
+        a = arrayOfTriangles(f,a,0,n,6)
+        countTriangles(a,0,0,n)
+    }
