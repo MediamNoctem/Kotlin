@@ -1,15 +1,21 @@
+import java.io.File
 import java.lang.Integer.min
 import java.lang.Integer.max
 
+
 fun main() {
-    val a = enterArray()
+    // 1-2
+    /*val a = enterArray()
     val n = a.size
     println("Сумма элементов массива: " + sumElementsArray(a,n) + "   " + sumElArray(a))
     println("Произведение элементов массива: " + multElementsArray(a,n) + "   " + multElArray(a))
     println("Минимальный элемент массива: " + minElementArray(a,n) + "   " + minElArray(a))
-    println("Максимальный элемент массива: " + maxElementArray(a,n) + "   " + maxElArray(a))
+    println("Максимальный элемент массива: " + maxElementArray(a,n) + "   " + maxElArray(a))*/
+    // 3
+    var b = enterArrayFrom()
+    b.forEach { print("$it ") }
 }
-// 1
+// 1-2
 // Вводим массив через клавиатуру.
 fun enterArray(): Array<Int> =
     run {
@@ -75,3 +81,26 @@ fun sumElArray(a: Array<Int>): Int = arrayOp(a,0,{ a,b -> a + b })
 fun multElArray(a: Array<Int>): Int = arrayOp(a,1,{ a,b -> a*b })
 fun minElArray(a: Array<Int>): Int = arrayOp(a,a[0],{ a,b -> min(a,b) })
 fun maxElArray(a: Array<Int>): Int = arrayOp(a,a[0],{ a,b -> max(a,b) })
+
+// 3
+fun enterArrayFromFile(path: String): Array<Int> =
+    run {
+        var a: Array<Int> = emptyArray()
+        File(path).forEachLine { a += it.toInt() }
+        a
+    }
+fun enterArrayFrom(): Array<Int> =
+    run {
+        var b = emptyArray<Int>()
+        println("1. Ввести массив с клавиатуры.")
+        println("2. Ввести массив из файла.")
+        when (readLine()) {
+            "1" -> b = enterArray()
+            "2" -> {
+                println("Введите полный путь к файлу, из которого нужно считать массив (использовать двойной обратный слэш): ")
+                b = enterArrayFromFile(readLine()!!.toString())
+            }
+            else -> println("Неизвестная команда!")
+        }
+        b
+    }
