@@ -10,10 +10,13 @@ fun main() {
     println("Сумма элементов массива: " + sumElementsArray(a,n) + "   " + sumElArray(a))
     println("Произведение элементов массива: " + multElementsArray(a,n) + "   " + multElArray(a))
     println("Минимальный элемент массива: " + minElementArray(a,n) + "   " + minElArray(a))
-    println("Максимальный элемент массива: " + maxElementArray(a,n) + "   " + maxElArray(a))*/
+    println("Максимальный элемент массива: " + maxElementArray(a,n) + "   " + maxElArray(a))
     // 3
     var b = enterArrayFrom()
-    b.forEach { print("$it ") }
+    b.forEach { print("$it ") }*/
+    // 4_11
+    val a = arrayOf(55,55)
+    println("Отличающийся элемент: " + findDiffElArray(a))
 }
 // 1-2
 // Вводим массив через клавиатуру.
@@ -103,4 +106,20 @@ fun enterArrayFrom(): Array<Int> =
             else -> println("Неизвестная команда!")
         }
         b
+    }
+
+// 4_11
+fun findDiffElArray(a: Array<Int>): Int =
+    when {
+        a.size < 3 -> throw IllegalArgumentException("Ошибка!")
+        else -> findDiffElArray(a,0)
+    }
+fun findDiffElArray(a: Array<Int>, i: Int): Int =
+    if (a[i] == a[i + 1]) {
+        if (a[i + 1] == a[i + 2]) {
+            val i1 = i + 1
+            findDiffElArray(a, i1)
+        } else a[i + 2]
+    } else {
+        if (a[i] == a[i + 2]) a[i + 1] else a[i]
     }
