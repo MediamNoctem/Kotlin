@@ -18,9 +18,8 @@ fun main() {
     val a = arrayOf(55,55,85)
     println("Отличающийся элемент: " + findDiffElArray(a))*/
     // 4_12
-    val a = arrayOf(5,0,1,2,3,9,7,0,9,6,9,3,2,0,7,8,9)
-    reverseElBetweenMinAndMax(a)
-    a.forEach { print("$it ") }
+    val a = arrayOf(5,0,0,1,9,5,10)
+    println(countMinFromInterval(a,0,8))
 }
 // 1-2
 // Вводим массив через клавиатуру.
@@ -172,3 +171,32 @@ fun reverseElBetweenMinAndMax(a: Array<Int>, min: Int, max: Int, i: Int): Unit =
             }
         }
     }
+
+// 4_22
+// Находим минимум из интервала.
+fun minFromInterval(x: Array<Int>, a: Int, b: Int): Int = minFromInterval(x,0,a,b)
+tailrec fun minFromInterval(x: Array<Int>, i: Int, a: Int, b: Int): Int =
+    if (i == x.size) throw IllegalArgumentException("Ошибка!") else {
+        if (x[i] > a && x[i] < b) minFromInterval(x,0,a,b,x[i]) else {
+            val i1 = i + 1
+            minFromInterval(x,i1,a,b)
+        }
+    }
+tailrec fun minFromInterval(x: Array<Int>, i: Int, a: Int, b: Int, min: Int): Int =
+    if (i == x.size) min else {
+        if (x[i] > a && x[i] < b) {
+            val min1 = min(min,x[i])
+            val i1 = i + 1
+            minFromInterval(x,i1,a,b,min1)
+        } else {
+            val i1 = i + 1
+            minFromInterval(x,i1,a,b,min)
+        }
+    }
+// Считаем, сколько раз встречается минимум из интервала в массиве.
+fun countMinFromInterval(x: Array<Int>, a: Int, b: Int): Int =
+    run {
+        val min = minFromInterval(x, a, b)
+        countMinFromInterval(x, min)
+    }
+fun countMinFromInterval(x: Array<Int>, min: Int): Int = x.count { it == min }
