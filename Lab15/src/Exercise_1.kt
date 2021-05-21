@@ -17,9 +17,10 @@ fun main() {
     // 4_11
     val a = arrayOf(55,55,85)
     println("Отличающийся элемент: " + findDiffElArray(a))*/
-    // 4_12
+    // 4_24
     val a = arrayOf(5,0,0,1,9,5,10)
-    println(countMinFromInterval(a,0,8))
+    var max: Array<Int> = findTwoMax(a)
+    max.forEach { print("$it ") }
 }
 // 1-2
 // Вводим массив через клавиатуру.
@@ -200,3 +201,21 @@ fun countMinFromInterval(x: Array<Int>, a: Int, b: Int): Int =
         countMinFromInterval(x, min)
     }
 fun countMinFromInterval(x: Array<Int>, min: Int): Int = x.count { it == min }
+
+// 4_24
+fun findTwoMax(a: Array<Int>): Array<Int> =
+    run {
+        val max = Array<Int>(2){0}
+        max[0] = a.maxOrNull() ?: 0
+        max[1] = a.minOrNull() ?: 0
+        findTwoMax(a,max,0)
+        max
+    }
+fun findTwoMax(a: Array<Int>, max: Array<Int>, i: Int): Unit =
+    run {
+        if (i != a.size) {
+            if (a[i] > max[1] && a[i] < max[0]) max[1] = a[i]
+            val i1 = i + 1
+            findTwoMax(a, max, i1)
+        }
+    }
