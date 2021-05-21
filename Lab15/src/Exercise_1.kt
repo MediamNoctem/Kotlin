@@ -13,10 +13,14 @@ fun main() {
     println("Максимальный элемент массива: " + maxElementArray(a,n) + "   " + maxElArray(a))
     // 3
     var b = enterArrayFrom()
-    b.forEach { print("$it ") }*/
+    b.forEach { print("$it ") }
     // 4_11
-    val a = arrayOf(55,55)
-    println("Отличающийся элемент: " + findDiffElArray(a))
+    val a = arrayOf(55,55,85)
+    println("Отличающийся элемент: " + findDiffElArray(a))*/
+    // 4_12
+    val a = arrayOf(5,0,1,2,3,9,7,0,9,6,9,3,2,0,7,8,9)
+    reverseElBetweenMinAndMax(a)
+    a.forEach { print("$it ") }
 }
 // 1-2
 // Вводим массив через клавиатуру.
@@ -114,7 +118,7 @@ fun findDiffElArray(a: Array<Int>): Int =
         a.size < 3 -> throw IllegalArgumentException("Ошибка!")
         else -> findDiffElArray(a,0)
     }
-fun findDiffElArray(a: Array<Int>, i: Int): Int =
+tailrec fun findDiffElArray(a: Array<Int>, i: Int): Int =
     if (a[i] == a[i + 1]) {
         if (a[i + 1] == a[i + 2]) {
             val i1 = i + 1
@@ -122,4 +126,49 @@ fun findDiffElArray(a: Array<Int>, i: Int): Int =
         } else a[i + 2]
     } else {
         if (a[i] == a[i + 2]) a[i + 1] else a[i]
+    }
+
+// 4_12
+// Ищем индекс элемента массива, который больше i и равен t.
+tailrec fun findIndex(a: Array<Int>, i: Int, t: Int, j: Int): Int =
+    if (j >= a.size) -1 else {
+        if (a[j] == t && j >= i) j else {
+            val j1 = j + 1
+            findIndex(a, i, t, j1)
+        }
+    }
+// Заменяем в массиве a элементы с индексами от start до end
+// элементами массива b.
+fun editElementsArrayByArray(a: Array<Int>, b: Array<Int>, i: Int, start: Int, end: Int): Unit =
+    if (i < start) {
+        val i1 = i + 1
+        editElementsArrayByArray(a,b,i1,start,end)
+    } else {
+        if (i == end) a[end] = b[i - start] else {
+            val i1 = i + 1
+            a[i] = b[i - start]
+            editElementsArrayByArray(a,b,i1,start,end)
+        }
+    }
+fun reverseElBetweenMinAndMax(a: Array<Int>): Unit =
+    run {
+        val min = minElArray(a)
+        val max = maxElArray(a)
+        reverseElBetweenMinAndMax(a,min,max,0)
+    }
+fun reverseElBetweenMinAndMax(a: Array<Int>, min: Int, max: Int, i: Int): Unit =
+    run {
+        val indMin = findIndex(a, i, min, 0)
+        val indMax = findIndex(a, i, max, 0)
+        if (indMin > -1 && indMax > -1) {
+            if (indMin < indMax - 2) {
+                val b: Array<Int> = a.copyOfRange(indMin + 1, indMax)
+                b.reverse()
+                editElementsArrayByArray(a, b, 0, indMin + 1, indMax - 1)
+                reverseElBetweenMinAndMax(a, min, max, indMax)
+            } else {
+                val i1 = max(indMin, indMax)
+                reverseElBetweenMinAndMax(a, min, max, i1)
+            }
+        }
     }
